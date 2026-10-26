@@ -24,9 +24,9 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
         embeddings.append(embedding.data[0].embedding)
         i += 1
         if i % 10 == 0:
-            print(f"Processed {i} texts")
-            print(f"chunk : {text} ")
-            print(f"vector: {embedding.data[0].embedding}")
+            print(
+                f"Processed {i} texts chunk : {len(text)} embed: {len(embedding.data[0].embedding)}"
+            )
         time.sleep(wait_time)
 
     return embeddings

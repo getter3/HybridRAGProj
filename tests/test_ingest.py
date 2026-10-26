@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from hybrid_rag.rag.embeddings import embed_texts
+from hybrid_rag.rag.ingestion import ingest_file
 from langchain_text_splitters import TokenTextSplitter
 from hybrid_rag.rag.embeddings import embed_texts
 
@@ -31,9 +32,15 @@ def prepare_file(path: Path) -> tuple[list[str], list[list[float]]]:
 
 if __name__ == "__main__":
     sample = Path("data/org/Shin Megami Tensei - Majin Guide.md")
-    chunks, embeddings = prepare_file(sample)
 
-    print(f"Chunks: {len(chunks)}")
-    print(f"Embeddings: {len(embeddings)}")
-    if embeddings:
-        print(f"Vector dimensions: {len(embeddings[0])}")
+    # test simple embedding
+    # chunks, embeddings = prepare_file(sample)
+
+    # print(f"Chunks: {len(chunks)}")
+    # print(f"Embeddings: {len(embeddings)}")
+    # if embeddings:
+    #     print(f"Vector dimensions: {len(embeddings[0])}")
+
+    # test ingest_file
+    chunk_count = ingest_file(sample)
+    print(f"Ingested {chunk_count} chunks from file {sample}")
