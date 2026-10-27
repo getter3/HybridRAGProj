@@ -18,10 +18,7 @@ wait_time = int(os.environ["EMBEDDING_WAIT_TIME"])
 
 def embed_text(text: str) -> list[float]:
     """Return the embedding vector for a single text."""
-    client.embeddings.create(
-        model=embedding_model,
-        input=text,
-    )
+    
     return (
         client.embeddings.create(
             model=embedding_model,

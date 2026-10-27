@@ -93,6 +93,8 @@ def hybrid_search(query: str, *, limit: int = 10) -> list[SearchResult]:
                 source_created_at=row[5],
                 source_modified_at=row[6],
                 score=row[7],
+                rerank_score=row[7],
+                # initially set to the same as score, will be updated after reranking
             )
             for row in results
         ]
@@ -132,10 +134,11 @@ if __name__ == "__main__":
     results = hybrid_search(query, limit=5)
     for result in results:
         logger.info(
-            "result: id:%s index:%s score:%s  file:%s  content:%s",
+            "result: id:%s index:%s score(scale):%.5f rerank_score(scale):%.5f file:%s  content:%s",
             result.chunk_id,
             result.chunk_index,
             result.score,
+            result.rerank_score,
             result.filename,
-            result.content[:50],
+            result.content[:150],
         )

@@ -12,3 +12,4 @@ class SearchResult(BaseModel):
     source_created_at: datetime | None
     source_modified_at: datetime | None
     score: float
+    rerank_score: float

@@ -39,11 +39,12 @@ def rerank(query: str, candidates: list[SearchResult]) -> list[SearchResult]:
     ranked_candidates = []
     for item in response_data["results"]:
         index = item["index"]
-
+        rerank_score = item.get("relevance_score", 0.0)
         # check if the index is valid
         if not isinstance(index, int) or not (0 <= index < len(candidates)):
             logger.warning("Invalid index in rerank response: %s", index)
             continue
+        candidates[index].rerank_score = rerank_score
         ranked_candidates.append(candidates[index])
 
     return ranked_candidates
