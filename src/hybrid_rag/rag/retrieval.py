@@ -2,7 +2,6 @@ import logging
 import os
 
 import psycopg
-from pgvector import Vector
 from pgvector.psycopg import register_vector
 
 from hybrid_rag.models import SearchResult
@@ -132,7 +131,7 @@ if __name__ == "__main__":
     query = "Where we met Pascal the dog?"
     results = hybrid_search(query, limit=5)
     for result in results:
-        logging.info(
+        logger.info(
             "result: id:%s index:%s score:%s  file:%s  content:%s",
             result.chunk_id,
             result.chunk_index,
