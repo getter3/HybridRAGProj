@@ -1,18 +1,44 @@
+import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from hybrid_rag.rag.embeddings import embed_texts
-from langchain_text_splitters import TokenTextSplitter
+
 import psycopg
+from langchain_text_splitters import (
+    MarkdownHeaderTextSplitter,
+    RecursiveCharacterTextSplitter,
+)
 from pgvector import Vector
 from pgvector.psycopg import register_vector
 from psycopg.types.json import Jsonb
 
+from hybrid_rag.rag.embeddings import embed_texts
 
-splitter = TokenTextSplitter(
+logger = logging.getLogger(__name__)
+
+headers_to_split_on = [
+    ("#", "h1"),
+    ("##", "h2"),
+    ("###", "h3"),
+]
+
+# Initialize the header-based text splitter
+header_splitter = MarkdownHeaderTextSplitter(
+    headers_to_split_on=headers_to_split_on,
+    strip_headers=False,
+)
+
+size_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+    encoding_name="cl100k_base",
     chunk_size=int(os.environ["CHUNK_SIZE"]),
     chunk_overlap=int(os.environ["CHUNK_OVERLAP"]),
 )
+
+# basic splitter based on token
+# splitter = TokenTextSplitter(
+#     chunk_size=int(os.environ["CHUNK_SIZE"]),
+#     chunk_overlap=int(os.environ["CHUNK_OVERLAP"]),
+# )
 
 INSERT_SQL = """
     INSERT INTO "SMT1db".smt1doc
@@ -33,11 +59,19 @@ def ingest_file(path: Path) -> int:
         with open(path, "r", encoding="utf-8") as f:
             content = f.read()
 
-        chunks = splitter.split_text(content)
+        sections = header_splitter.split_text(content)
+        chunk_documents = size_splitter.split_documents(sections)
+        chunks = [document.page_content for document in chunk_documents]
 
-        print(f"Chunked {len(chunks)} chunks from file {path}")
+        # chunks = splitter.split_text(content)
+
+        logger.info("Chunked %s chunks from file %s", len(chunks), path)
         embeddings = embed_texts(chunks)
-        print(f"Generated embeddings for {len(embeddings)} chunks from file {path}")
+        logger.info(
+            "Generated embeddings for %s chunks from file %s",
+            len(embeddings),
+            path,
+        )
         if len(embeddings) != len(chunks):
             raise ValueError(
                 "The number of embeddings does not match the number of chunks"
@@ -52,21 +86,25 @@ def ingest_file(path: Path) -> int:
         # open a connection to the database or storage
         connection = open_database_connection()  # Replace with actual connection code
         register_vector(connection)
-        print(f"Opened database connection for file {path}")
+        logger.info("Opened database connection for file %s", path)
 
         # Persist the chunks and embeddings to the database or storage
         chunk_inserted = 0
 
-        for chunk_index, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+        for chunk_index, (document, embedding) in enumerate(
+            zip(chunk_documents, embeddings)
+        ):
+            chunk = document.page_content
             chunk_metadata = {
+                **document.metadata,
                 "target_chunk_size_tokens": int(os.environ["CHUNK_SIZE"]),
                 "chunk_size_chars": len(chunk),
                 "embedding_dimensions": len(embedding),
-                "total_chunk": len(chunks),
+                "total_chunk": len(chunk_documents),
             }
             insert_document(
                 connection,
-                path.name,
+                str(path.resolve()),
                 chunk_index,
                 chunk_metadata,
                 chunk,
@@ -77,21 +115,21 @@ def ingest_file(path: Path) -> int:
             chunk_inserted += 1
             if chunk_inserted % 10 == 0:
                 connection.commit()
-                print(f"Inserted {chunk_inserted} chunks for file {path}")
+                logger.info("Inserted %s chunks for file %s", chunk_inserted, path)
 
         if chunk_inserted % 10 != 0:
             connection.commit()
-            print(f"Inserted {chunk_inserted} chunks for file {path}")
+            logger.info("Inserted %s chunks for file %s", chunk_inserted, path)
 
         connection.commit()
-        print(f"Persisted {len(chunks)} chunks from file {path}")
-    except Exception as e:
-        print(f"Error ingesting file {path}: {e}")
+        logger.info("Persisted %s chunks from file %s", len(chunks), path)
+    except Exception:
+        logger.exception("Error ingesting file %s", path)
         return 0
     finally:
         if connection is not None:
             connection.close()
-            print(f"Closed database connection for file {path}")
+            logger.info("Closed database connection for file %s", path)
     return len(chunks)
 
 
@@ -128,3 +166,23 @@ def insert_document(
             Jsonb(metadata),
         ),
     )
+
+
+def main() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s [%(filename)s:%(funcName)s:%(lineno)d] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+    ingest_folder = Path(os.environ["INGEST_SOURCE_DIR"])
+
+    # ingest all the md files
+    for sample_file in ingest_folder.glob("*.md"):
+        logger.info("Processing file %s", sample_file)
+        chunk_count = ingest_file(sample_file)
+        logger.info("Ingested %s chunks from %s", chunk_count, sample_file)
+
+
+if __name__ == "__main__":
+    main()

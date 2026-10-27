@@ -1,6 +1,10 @@
-from openai import OpenAI
+import logging
 import os
 import time
+
+from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 client = OpenAI(
     base_url=os.environ["EMBEDDING_API_BASE_URL"],
@@ -12,20 +16,34 @@ embedding_model = os.environ["EMBEDDING_MODEL"]
 wait_time = int(os.environ["EMBEDDING_WAIT_TIME"])
 
 
-def embed_texts(texts: list[str]) -> list[list[float]]:
-    """Return one embedding vector per input text."""
-    embeddings = []
-    i = 0
-    for text in texts:
-        embedding = client.embeddings.create(
+def embed_text(text: str) -> list[float]:
+    """Return the embedding vector for a single text."""
+    client.embeddings.create(
+        model=embedding_model,
+        input=text,
+    )
+    return (
+        client.embeddings.create(
             model=embedding_model,
             input=text,
         )
-        embeddings.append(embedding.data[0].embedding)
-        i += 1
+        .data[0]
+        .embedding
+    )
+
+
+def embed_texts(texts: list[str]) -> list[list[float]]:
+    """Return one embedding vector per input text."""
+    embeddings = []
+    for i, text in enumerate(texts, start=1):
+        embedding = embed_text(text)
+        embeddings.append(embedding)
         if i % 10 == 0:
-            print(
-                f"Processed {i} texts chunk : {len(text)} embed: {len(embedding.data[0].embedding)}"
+            logger.info(
+                "Processed %s texts; current chunk has %s characters and embedding has %s dimensions",
+                i,
+                len(text),
+                len(embedding),
             )
         time.sleep(wait_time)
 

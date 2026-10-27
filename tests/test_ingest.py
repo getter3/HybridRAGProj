@@ -1,9 +1,13 @@
+import logging
 import os
 from pathlib import Path
-from hybrid_rag.rag.embeddings import embed_texts
-from hybrid_rag.rag.ingestion import ingest_file
+
 from langchain_text_splitters import TokenTextSplitter
-from hybrid_rag.rag.embeddings import embed_texts
+
+from hybrid_rag.rag.embeddings import embed_text, embed_texts
+from hybrid_rag.rag.ingestion import ingest_file
+
+logger = logging.getLogger(__name__)
 
 splitter = TokenTextSplitter(
     chunk_size=int(os.environ["CHUNK_SIZE"]),
@@ -16,7 +20,7 @@ def prepare_file(path: Path) -> tuple[list[str], list[list[float]]]:
         content = file.read()
 
     chunks = splitter.split_text(content)
-    print(f"Number of chunks: {len(chunks)}")
+    logger.info("Number of chunks: %s", len(chunks))
 
     # for i in range(3):
     #     if i < len(chunks):
@@ -31,7 +35,13 @@ def prepare_file(path: Path) -> tuple[list[str], list[list[float]]]:
 
 
 if __name__ == "__main__":
-    sample = Path("data/org/Shin Megami Tensei - Majin Guide.md")
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s [%(filename)s:%(funcName)s:%(lineno)d] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+    # sample = Path("data/org/Shin Megami Tensei - Majin Guide.md")
 
     # test simple embedding
     # chunks, embeddings = prepare_file(sample)
@@ -42,5 +52,10 @@ if __name__ == "__main__":
     #     print(f"Vector dimensions: {len(embeddings[0])}")
 
     # test ingest_file
-    chunk_count = ingest_file(sample)
-    print(f"Ingested {chunk_count} chunks from file {sample}")
+    # chunk_count = ingest_file(sample)
+    # logger.info("Ingested %s chunks from file %s", chunk_count, sample)
+
+    test_text = "Stats of David in the game"
+    embedding = embed_text(test_text)
+    logger.info("%s", embedding)
+    # logger.info("Embedding for '%s' has %s dimensions", test_text, len(embedding))
