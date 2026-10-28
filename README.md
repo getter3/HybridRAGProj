@@ -102,3 +102,20 @@ uv run ruff check .
 
 No `.env` file, database schema, database migration, Docker database, or populated
 retrieval implementation is included by design.
+
+
+## docker related
+- created network command
+```bash
+docker network create smt1net --driver bridge
+```
+
+- created the app image
+```bash
+docker build -t smt1_app:latest .
+```
+
+- created the docker compose 
+```bash
+docker compose -p smt1_service down -d
+```

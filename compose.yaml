@@ -1,0 +1,38 @@
+services:
+  smtapp:
+    image: smt1_app:latest
+    ports:
+      - "8890:8890"
+    env_file:
+      - .env
+    environment:
+      DATABASE_HOST: smt1db
+    depends_on:
+      - smt1db
+    networks:
+      - smt1net
+
+  smt1db:
+    image: paradedb/paradedb:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    volumes:
+      - paradedb_data:/var/lib/postgresql/
+    networks:
+      - smt1net
+
+
+volumes:
+  paradedb_data:
+    name: paradedb_data
+
+networks:
+  smt1net:
+    external: true # Use an existing external network
+
+
+    
