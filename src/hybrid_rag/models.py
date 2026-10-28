@@ -11,5 +11,5 @@ class SearchResult(BaseModel):
     metadata: dict[str, object]
     source_created_at: datetime | None
     source_modified_at: datetime | None
-    score: float
-    rerank_score: float
+    score: float | None=None
+    rerank_score: float | None=None

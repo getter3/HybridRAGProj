@@ -59,6 +59,21 @@ ORDER BY score DESC
 LIMIT %s;
 """
 
+SEEK_SQL = """
+SELECT 
+    sm.chunk_id,
+    sm.filename,
+    sm.chunk_index,
+    sm.content,
+    sm.metadata,
+    sm.source_created_at,
+    sm.source_modified_at
+FROM "SMT1db".smt1doc sm
+WHERE filename = (SELECT filename FROM "SMT1db".smt1doc WHERE chunk_id = %s)
+  AND chunk_index BETWEEN %s AND %s
+ORDER BY sm.chunk_index;
+"""
+
 
 logger = logging.getLogger(__name__)
 
@@ -78,26 +93,27 @@ def hybrid_search(query: str, *, limit: int = 10) -> list[SearchResult]:
         query_embedding = embed_text(query)
 
         connection = open_database_connection()
-        cursor = connection.execute(
-            QUERY_SQL, (query_embedding, query_embedding, query, limit)
-        )
-        results = cursor.fetchall()
 
-        search_results = [
-            SearchResult(
-                chunk_id=row[0],
-                filename=row[1],
-                chunk_index=row[2],
-                content=row[3],
-                metadata=row[4],
-                source_created_at=row[5],
-                source_modified_at=row[6],
-                score=row[7],
-                rerank_score=row[7],
-                # initially set to the same as score, will be updated after reranking
-            )
-            for row in results
-        ]
+        with connection.cursor() as cursor:
+            cursor.execute(QUERY_SQL, (query_embedding, query_embedding, query, limit))
+            results = cursor.fetchall()
+
+            search_results = [
+                SearchResult(
+                    chunk_id=row[0],
+                    filename=row[1],
+                    chunk_index=row[2],
+                    content=row[3],
+                    metadata=row[4],
+                    source_created_at=row[5],
+                    source_modified_at=row[6],
+                    score=row[7],
+                    rerank_score=row[7],
+                    # initially set to the same as score, will be updated after reranking
+                )
+                for row in results
+            ]
+
         search_results = rerank(query, search_results)
 
     except Exception as e:
@@ -106,6 +122,38 @@ def hybrid_search(query: str, *, limit: int = 10) -> list[SearchResult]:
         if connection is not None:
             connection.close()
 
+    return search_results
+
+
+def seekDoc(chunk_id: int, chunk_index: int) -> list[SearchResult] | None:
+    """seek the document around the given chunk_id and chunk_index"""
+    connection = None
+    search_results = []
+    try:
+        connection = open_database_connection()
+        with connection.cursor() as cursor:
+            cursor.execute(SEEK_SQL, (chunk_id, chunk_index - 1, chunk_index + 1))
+            results = cursor.fetchall()
+            search_results = [
+                SearchResult(
+                    chunk_id=row[0],
+                    filename=row[1],
+                    chunk_index=row[2],
+                    content=row[3],
+                    metadata=row[4],
+                    source_created_at=row[5],
+                    source_modified_at=row[6],
+                    score=-1,
+                    rerank_score=-1,
+                )
+                for row in results
+            ]
+
+    except Exception as e:
+        logger.error(f"Error opening database connection: {e}")
+    finally:
+        if connection is not None:
+            connection.close()
     return search_results
 
 
@@ -130,8 +178,10 @@ if __name__ == "__main__":
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    query = "Where we met Pascal the dog?"
-    results = hybrid_search(query, limit=5)
+    results = seekDoc(chunk_id=272, chunk_index=2)  # example usage
+
+    # query = "Where we met Pascal the dog?"
+    # results = hybrid_search(query, limit=5)
     for result in results:
         logger.info(
             "result: id:%s index:%s score(scale):%.5f rerank_score(scale):%.5f file:%s  content:%s",

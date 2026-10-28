@@ -79,7 +79,7 @@ commit `.env`.
 Run the starter API:
 
 ```bash
-uv run uvicorn hybrid_rag.api.main:app --reload
+uv run --env-file .env uvicorn hybrid_rag.api.main:app --reload --port 8890
 ```
 
 The health route is usable. The search route deliberately returns `501 Not

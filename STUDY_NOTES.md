@@ -127,6 +127,34 @@ an item's effect or a walkthrough location. The most useful chunking approach
 is the one that improves retrieval on this corpus, not necessarily the most
 complex one.
 
+## FastAPI-generated API specification
+
+FastAPI automatically creates an OpenAPI specification from the application's
+routes, request parameter types, Pydantic validation constraints, and response
+models. The specification is generated from the code; it is not a separate
+hand-maintained API definition.
+
+With the development server running on port `8890`, the default URLs are:
+
+- `http://127.0.0.1:8890/docs` — interactive Swagger UI for exploring and
+  sending requests to the endpoints.
+- `http://127.0.0.1:8890/openapi.json` — the machine-readable OpenAPI JSON
+  document.
+- `http://127.0.0.1:8890/redoc` — an alternative API documentation view.
+
+For GET endpoints, bind Pydantic request models to query parameters with
+`Annotated[RequestModel, Query()]`. This helps FastAPI describe fields such as
+`query`, `limit`, and their validation constraints as query parameters in the
+generated specification. `response_model` describes the response shape.
+
+To save the running application's generated specification locally:
+
+```bash
+curl http://127.0.0.1:8890/openapi.json -o openapi.json
+```
+
+Official guide: [FastAPI OpenAPI docs](https://fastapi.tiangolo.com/tutorial/metadata/).
+
 ## Official documentation
 
 - [Text splitter overview](https://docs.langchain.com/oss/python/integrations/splitters)
