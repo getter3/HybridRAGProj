@@ -1,0 +1,148 @@
+<mxfile host="Electron" agent="Copilot">
+  <diagram id="hybrid-rag-flow" name="Skill, RAG &amp; Docker">
+    <mxGraphModel dx="1601" dy="1104" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;fontColor=#172033;fontSize=26;fontStyle=1;" value="&lt;font style=&quot;color: rgb(0, 153, 0);&quot;&gt;SMT1 Skill + Hybrid RAG + Docker Compose&lt;/font&gt;" vertex="1">
+          <mxGeometry height="44" width="1250" x="50" y="24" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;fontColor=#536174;fontSize=14;" value="&lt;font style=&quot;color: rgb(255, 0, 0);&quot;&gt;Current project flow — ingestion is separate; Docker Compose runs the API and PostgreSQL services&lt;/font&gt;" vertex="1">
+          <mxGeometry height="28" width="1500" x="52" y="66" as="geometry" />
+        </mxCell>
+        <mxCell id="skillbg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4f0ff;strokeColor=#a78bfa;strokeWidth=2;dashed=1;align=left;verticalAlign=top;spacingTop=12;spacingLeft=14;fontColor=#5b21b6;fontSize=15;fontStyle=1;" value="AGENT / SKILL WORKFLOW" vertex="1">
+          <mxGeometry height="360" width="485" x="40" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="ingestbg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e8;strokeColor=#e8aa37;strokeWidth=2;dashed=1;align=left;verticalAlign=top;spacingTop=12;spacingLeft=14;fontColor=#8a5100;fontSize=15;fontStyle=1;" value="DOCUMENT INGESTION (RUN SEPARATELY)" vertex="1">
+          <mxGeometry height="380" width="485" x="40" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="composebg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#5b9bd5;strokeWidth=2;dashed=1;align=center;verticalAlign=top;spacingTop=12;spacingLeft=14;fontColor=#174a75;fontSize=15;fontStyle=1;" value="DOCKER COMPOSE PROJECT  •  external network: smt1net" vertex="1">
+          <mxGeometry height="875" width="930" x="565" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="externalbg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3faf5;strokeColor=#6aa984;strokeWidth=2;dashed=1;align=left;verticalAlign=top;spacingTop=12;spacingLeft=14;fontColor=#24613b;fontSize=15;fontStyle=1;" value="EXTERNAL PROVIDERS" vertex="1">
+          <mxGeometry height="330" width="330" x="1540" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="runtimebg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7f8fa;strokeColor=#aab4c0;strokeWidth=2;dashed=1;align=left;verticalAlign=top;spacingTop=12;spacingLeft=14;fontColor=#344054;fontSize=15;fontStyle=1;" value="BUILD / RUNTIME NOTES" vertex="1">
+          <mxGeometry height="405" width="325" x="1540" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="person" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b5cf6;fontColor=#312e81;fontSize=14;" value="Player / user&#xa;asks an SMT1 question" vertex="1">
+          <mxGeometry height="64" width="170" x="75" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="skill" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#8b5cf6;fontColor=#312e81;fontSize=14;fontStyle=1;" value="SMT1 Search Skill&#xa;SKILL.md instructions&#xa;API first; assets as last resort" vertex="1">
+          <mxGeometry height="95" width="225" x="285" y="149.5" as="geometry" />
+        </mxCell>
+        <mxCell id="callapi" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#8b5cf6;fontColor=#312e81;fontSize=13;" value="&lt;b&gt;HTTP calls&lt;br&gt;GET /search?query=…&amp;amp;limit=10&lt;br&gt;GET /seek?chunk_id=…&amp;amp;chunk_index=…&lt;/b&gt;" vertex="1">
+          <mxGeometry height="95" width="220" x="285" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="answer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ddd6fe;strokeColor=#8b5cf6;fontColor=#312e81;fontSize=13;" value="Answer with evidence&#xa;cite filename + chunk ID/index&#xa;or asset filename + heading" vertex="1">
+          <mxGeometry height="76" width="190" x="75" y="244" as="geometry" />
+        </mxCell>
+        <mxCell id="fallback" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=12;" value="Use only if API search/seek is&#xa;unavailable or lacks evidence:&#xa;check bundled Markdown assets" vertex="1">
+          <mxGeometry height="90" width="200" x="70" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="docs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d99a22;fontColor=#754400;fontSize=14;" value="Markdown sources&#xa;data/org/*.md" vertex="1">
+          <mxGeometry height="64" width="165" x="75" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="ingest" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1c9;strokeColor=#d99a22;fontColor=#754400;fontSize=13;fontStyle=1;" value="Ingestion worker&#xa;load Markdown → split by headings&#xa;then chunk by token size / overlap" vertex="1">
+          <mxGeometry height="90" width="210" x="275" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="embedchunks" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d99a22;fontColor=#754400;fontSize=13;" value="Embed each chunk&#xa;write vector + metadata&#xa;to PostgreSQL smt1doc" vertex="1">
+          <mxGeometry height="65" width="220" x="270" y="695" as="geometry" />
+        </mxCell>
+        <mxCell id="schemaNote" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=12;" value="Learner-managed setup&#xa;Provision DB, extensions, schema, and indexes separately.&#xa;compose.yaml does not run schema SQL or an ingestion service." vertex="1">
+          <mxGeometry height="78" width="410" x="75" y="785" as="geometry" />
+        </mxCell>
+        <mxCell id="apiContainer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#377eb8;strokeWidth=2;align=left;verticalAlign=top;spacingTop=12;spacingLeft=12;fontColor=#174a75;fontSize=14;fontStyle=1;" value="" vertex="1">
+          <mxGeometry height="775" width="535" x="595" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="routes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dceeff;strokeColor=#377eb8;fontColor=#174a75;fontSize=14;fontStyle=1;" value="FastAPI routes&#xa;/health  •  /search  •  /seek" vertex="1">
+          <mxGeometry height="65" width="455" x="635" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="queryEmbed" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#377eb8;fontColor=#174a75;fontSize=14;" value="Query embedding&#xa;embed the user&#39;s question" vertex="1">
+          <mxGeometry height="75" width="455" x="635" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="nWd2Bf4uGbrgLL2naZgu-4" edge="1" parent="1" source="dbSearch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#0050ef;strokeColor=#001DBC;" target="rrf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dbSearch" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#377eb8;fontColor=#174a75;fontSize=14;" value="Hybrid retrieval&#xa;BM25 candidates (pg_search)&#xa;Vector candidates (pgvector)" vertex="1">
+          <mxGeometry height="80" width="455" x="635" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="rrf" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dceeff;strokeColor=#377eb8;fontColor=#174a75;fontSize=14;fontStyle=1;" value="Rank fusion (RRF)&#xa;combine BM25 + vector ranks&#xa;return top candidates" vertex="1">
+          <mxGeometry height="80" width="455" x="635" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="rerank" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#377eb8;fontColor=#174a75;fontSize=14;" value="OpenRouter reranking&#xa;score fused candidates&#xa;keep chunk IDs and metadata" vertex="1">
+          <mxGeometry height="80" width="455" x="635" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="response" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dceeff;strokeColor=#377eb8;fontColor=#174a75;fontSize=14;" value="SearchResponse JSON&#xa;chunk IDs, content, metadata&#xa;ranking scores" vertex="1">
+          <mxGeometry height="80" width="455" x="635" y="735" as="geometry" />
+        </mxCell>
+        <mxCell id="seeklogic" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#377eb8;fontColor=#174a75;fontSize=13;" value="/seek returns the target chunk&#xa;and its immediate neighbors" vertex="1">
+          <mxGeometry height="55" width="455" x="635" y="825" as="geometry" />
+        </mxCell>
+        <mxCell id="nWd2Bf4uGbrgLL2naZgu-3" edge="1" parent="1" source="dbContainer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fillColor=#008a00;strokeColor=#005700;" target="dbSearch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dbContainer" parent="1" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#e7f4e4;strokeColor=#6aa984;strokeWidth=2;fontColor=#24613b;fontSize=14;fontStyle=1;" value="SERVICE: smt1db&#xa;ParadeDB / PostgreSQL&#xa;port 5432 • persistent volume: paradedb_data" vertex="1">
+          <mxGeometry height="155" width="275" x="1190" y="382.5" as="geometry" />
+        </mxCell>
+        <mxCell id="dbContents" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5fbf4;strokeColor=#6aa984;fontColor=#24613b;fontSize=12;" value="smt1doc chunk rows&#xa;content + filename + index&#xa;JSONB metadata + embedding vector&#xa;pg_search / pgvector indexes" vertex="1">
+          <mxGeometry height="112" width="265" x="1195" y="543" as="geometry" />
+        </mxCell>
+        <mxCell id="network" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5fbff;strokeColor=#5b9bd5;fontColor=#174a75;fontSize=12;" value="Compose network: smt1net&#xa;smtapp depends_on smt1db&#xa;(startup ordering; no healthcheck shown)" vertex="1">
+          <mxGeometry height="82" width="265" x="1175" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="embeddingProvider" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f4e4;strokeColor=#6aa984;fontColor=#24613b;fontSize=14;fontStyle=1;" value="Embedding provider&#xa;configured via environment&#xa;used for chunks and queries" vertex="1">
+          <mxGeometry height="90" width="245" x="1570" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="rerankProvider" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f4e4;strokeColor=#6aa984;fontColor=#24613b;fontSize=13;fontStyle=1;" value="OpenRouter rerank endpoint&#xa;external HTTP request&#xa;model / key / URL from environment" vertex="1">
+          <mxGeometry height="90" width="245" x="1570" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="secretNote" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=12;" value="No credentials in the image.&#xa;Compose injects .env at runtime;&#xa;keep real secrets local and uncommitted." vertex="1">
+          <mxGeometry height="76" width="245" x="1580" y="187" as="geometry" />
+        </mxCell>
+        <mxCell id="dockerBuild" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#667085;fontColor=#344054;fontSize=12;" value="Dockerfile build&#xa;python:3.14-slim + pinned uv&#xa;copy src + lock / project files&#xa;uv sync --locked" vertex="1">
+          <mxGeometry height="90" width="245" x="1580" y="302" as="geometry" />
+        </mxCell>
+        <mxCell id="runNote" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f4f7;strokeColor=#667085;fontColor=#344054;fontSize=12;" value="Compose starts API and DB.&#xa;It does not start ingestion or run schema SQL." vertex="1">
+          <mxGeometry height="58" width="245" x="1580" y="417" as="geometry" />
+        </mxCell>
+        <mxCell id="e_user_skill" edge="1" parent="1" source="person" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b5cf6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="skill" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_skill_call" edge="1" parent="1" source="skill" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8b5cf6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="callapi" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_call_routes" edge="1" parent="1" source="callapi" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=block;startFill=1;endArrow=block;endFill=1;strokeColor=#8b5cf6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="routes" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fallback_answer" edge="1" parent="1" source="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#f59e0b;exitX=0.5;exitY=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="answer" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_docs_ingest" edge="1" parent="1" source="docs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d99a22;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="ingest" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ingest_embed" edge="1" parent="1" source="ingest" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#d99a22;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="embedchunks" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_routes_queryembed" edge="1" parent="1" source="routes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#377eb8;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="queryEmbed" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_embed_search" edge="1" parent="1" source="queryEmbed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#377eb8;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="dbSearch" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rrf_rerank" edge="1" parent="1" source="rrf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#377eb8;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="rerank" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rerank_response" edge="1" parent="1" source="rerank" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#377eb8;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="response" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nWd2Bf4uGbrgLL2naZgu-2" edge="1" parent="1" source="rerankProvider" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fillColor=#60a917;strokeColor=#2D7600;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="rerank">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nWd2Bf4uGbrgLL2naZgu-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=#2A28FF;" value="&lt;span style=&quot;font-size: 14px; font-weight: 700; text-align: left;&quot;&gt;SERVICE: smtapp | image: smt1_app:latest&lt;/span&gt;&lt;br style=&quot;font-size: 14px; font-weight: 700; text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 14px; font-weight: 700; text-align: left;&quot;&gt;FastAPI + Uvicorn inside the application container&lt;/span&gt;&lt;br style=&quot;font-size: 14px; font-weight: 700; text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 14px; font-weight: 700; text-align: left;&quot;&gt;host port 8890 → container port 8890&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="585" x="565" y="182" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
