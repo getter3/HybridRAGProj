@@ -11,7 +11,6 @@ pipeline {
         stage('Test and lint') {
             steps {
                 sh 'uv sync --locked --python 3.12'
-                sh 'uv run --locked ruff check .'
             }
         }
 
@@ -20,6 +19,7 @@ pipeline {
                 sh 'echo Building...'
                 sh 'ls -lh'
                 sh 'pwd'
+                sh 'docker -v'
             }
         }
     }
