@@ -8,6 +8,14 @@ pipeline {
             }
         }
 
+        stage('Test and lint') {
+            steps {
+                sh 'uv sync --locked --python 3.12'
+                sh 'uv run --locked pytest'
+                sh 'uv run --locked ruff check .'
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'echo Building...'
