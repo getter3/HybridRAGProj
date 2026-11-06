@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'docker-agent-alpine'}
+    agent { label 'hybridrag-jenkin-agent'}
 
     stages {
         stage('Checkout') {
